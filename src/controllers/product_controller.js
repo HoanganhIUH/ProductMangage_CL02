@@ -52,4 +52,10 @@ exports.updateProduct = async (req, res) => {
   if (result.rowCount === 0) return res.status(404).json({ message: "Product not found" });
   res.json({ message: "Product updated", product: result.rows[0] });
 };
+exports.deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const result = await pool.query("DELETE FROM product WHERE id = $1", [id]);
 
+  if (result.rowCount === 0) return res.status(404).json({ message: "Product not found" });
+  res.json({ message: "Product deleted" });
+};
