@@ -39,5 +39,17 @@ exports.getProductBySlug = async (req, res) => {
   if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
   res.json(result.rows[0]);
 };
+exports.updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, slug, quantity } = req.body;
+  const now = new Date();
 
+  const result = await pool.query(
+    "UPDATE product SET name = $1, slug = $2, quantity = $3, updated_at = $4 WHERE id = $5 RETURNING *",
+    [name, slug, quantity, now, id]
+  );
+
+  if (result.rowCount === 0) return res.status(404).json({ message: "Product not found" });
+  res.json({ message: "Product updated", product: result.rows[0] });
+};
 

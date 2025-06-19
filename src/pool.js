@@ -9,7 +9,7 @@ pool.query("SELECT NOW()", (err, res) => {
   if (err) {
     console.error("Connection failed:", err);
   } else {
-    console.log("Connected successfully at:", res.rows[0].now);
+    console.log("Connected successfully");
   }
 
 });
