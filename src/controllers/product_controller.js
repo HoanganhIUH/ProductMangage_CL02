@@ -32,4 +32,12 @@ exports.getProductById = async (req, res) => {
   if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
   res.json(result.rows[0]);
 };
+exports.getProductBySlug = async (req, res) => {
+  const { slug } = req.params;
+  const result = await pool.query("SELECT * FROM product WHERE slug = $1", [slug]);
+
+  if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
+  res.json(result.rows[0]);
+};
+
 
