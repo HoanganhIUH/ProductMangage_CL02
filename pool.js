@@ -1,8 +1,9 @@
-const { Pool }= require('pg');
+const { Pool } = require("pg");
+require("dotenv").config();
 
-const pool = new Pool ({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-})
+});
 
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
@@ -10,6 +11,6 @@ pool.query("SELECT NOW()", (err, res) => {
   } else {
     console.log("Connected successfully at:", res.rows[0].now);
   }
-});
 
-module.exports = { pool };
+});
+module.exports = pool;
