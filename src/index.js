@@ -12,7 +12,7 @@ const port = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/api", productRoutes)
+app.use("/api", productRoutes);
 
 app.listen(3000, () => {
     console.log(`Server is running on http://localhost:${port}`);
