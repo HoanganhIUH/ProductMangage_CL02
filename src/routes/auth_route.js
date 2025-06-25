@@ -8,6 +8,8 @@ router.post('/register', authController.register);
 router.post('/verify-otp', authController.verifyOTP);
 // Đăng nhập người dùng
 router.post('/login', authController.login);
+// Xóa người dùng
+router.delete('/delete-account', authController.deleteAccount);
 
 
 module.exports = router;

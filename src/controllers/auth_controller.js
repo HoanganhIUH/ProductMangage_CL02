@@ -90,3 +90,16 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: "Lỗi đăng nhập" });
   }
 };  
+exports.deleteAccount = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const result = await pool.query("DELETE FROM users WHERE email = $1", [email]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Không tìm thấy tài khoản để xóa" });
+    }
+    res.json({ message: "Xóa tài khoản thành công" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Xóa tài khoản thất bại" });
+  }
+};
