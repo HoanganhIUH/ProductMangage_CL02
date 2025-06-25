@@ -70,3 +70,23 @@ exports.verifyOTP = async (req, res) => {
     res.status(500).json({ error: "Xác thực thất bại" });
   }
 };
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
+    const user = result.rows[0];
+    if (!user) return res.status(404).json({ error: "Sai email hoặc mật khẩu" });
+
+    if (!user.is_verified) return res.status(401).json({ error: "Tài khoản chưa xác thực OTP" });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(401).json({ error: "Sai email hoặc mật khẩu" });
+
+    const token = jwt.sign({ userId: user.id, userName: user.name }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+
+    res.json({ message: "Đăng nhập thành công", token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Lỗi đăng nhập" });
+  }
+};  
