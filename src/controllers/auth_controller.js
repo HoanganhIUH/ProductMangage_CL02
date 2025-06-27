@@ -75,7 +75,7 @@ exports.login = async (req, res) => {
   try {
     const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
     const user = result.rows[0];
-    if (!user) return res.status(404).json({ error: "Sai email hoặc mật khẩu" });
+    if (!user) return res.status(401).json({ error: "Sai email hoặc mật khẩu" });
 
     if (!user.is_verified) return res.status(401).json({ error: "Tài khoản chưa xác thực OTP" });
 
