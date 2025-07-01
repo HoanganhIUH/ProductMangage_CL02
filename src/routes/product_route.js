@@ -65,10 +65,10 @@ router.post("/product", auth('admin'), productDTO, validate, productController.c
  *           type: string
  *         description: ID của sản phẩm
  *     responses:
- *       200:
+ *       201:
  *         description: Trả về thông tin sản phẩm
  *       404:
- *         description: Product not found
+ *         description: Slug already exists
  *       500:
  *         description: Internal server error
  */
