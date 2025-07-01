@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth_controller");
+const { registerDTO, loginDTO, verifyOTPDTO, resendOTPDTO, deleteAccountDTO } = require('../dtos/auth.dto');
+const validate = require('../middlewares/validate.middleware');
+const auth = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
@@ -28,7 +31,7 @@ const authController = require("../controllers/auth_controller");
  *       500:
  *         description: Không thể gửi email xác thực. Vui lòng thử lại sau.
  */
-router.post("/register", authController.register);
+router.post('/register', registerDTO, validate, authController.register);
 
 /**
  * @swagger
@@ -58,7 +61,7 @@ router.post("/register", authController.register);
  *       500:
  *         description: Xác thực thất bại
  */
-router.post("/verify-otp", authController.verifyOTP);
+router.post("/verify-otp", verifyOTPDTO, validate, authController.verifyOTP);
 // Đăng nhập người dùng
 /**
  * @swagger
@@ -80,13 +83,14 @@ router.post("/verify-otp", authController.verifyOTP);
  *                 type: string
  *     responses:
  *       200:
- *         description: Đăng nhập thành công!
+ *         description: Đăng nhập thành công
  *       401:
  *         description: Sai email hoặc mật khẩu
  *       403:
  *        description: Tài khoản chưa xác thực OTP
  *       500:
  *        description: Lỗi đăng nhập
+ *          
  */
 router.post("/login", authController.login);
 /**
@@ -113,7 +117,32 @@ router.post("/login", authController.login);
  *       500:
  *         description: Xóa tài khoản thất bại.
  */
-router.delete("/delete-account", authController.deleteAccount);
+router.delete("/delete-account", auth('admin'), deleteAccountDTO, validate, authController.deleteAccount);
 
+/**
+ * @swagger
+ * /api/auth/resend-otp:
+ *   post:
+ *     summary: Gửi lại mã OTP cho email chưa xác thực
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP mới đã được gửi đến email của bạn.
+ *       404:
+ *         description: Email không tồn tại hoặc đã xác thực
+ *       500:
+ *         description: Không thể gửi lại OTP
+ */
+router.post('/resend-otp', resendOTPDTO, validate, authController.resendOTP);
 
 module.exports = router;
